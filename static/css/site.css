@@ -454,3 +454,45 @@ legend { font-family: var(--head); font-size: 1.15rem; padding: 0; margin-bottom
 .empty .btn { margin-top: 10px; }
 .facts { margin: 6px 0; }
 .split > section > h2 { margin-top: 28px; }
+/* ---- Portal (Nov 2026) ---- */
+.portal-hero h1 { font-size: clamp(1.9rem, 5vw, 3rem); }
+.site-search { display: flex; gap: 8px; max-width: 640px; margin: 18px 0 6px; }
+.site-search input { flex: 1; min-width: 0; padding: 12px 14px; border: 1px solid var(--line); border-radius: 999px; font: inherit; background: #fff; }
+.site-search input:focus { outline: 2px solid var(--maroon); outline-offset: 1px; }
+.tiles { list-style: none; padding: 0; margin: 18px 0 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+@media (min-width: 720px) { .tiles { grid-template-columns: repeat(4, 1fr); } }
+.tiles a { display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; column-gap: 10px; align-items: center; padding: 12px; background: #fff; border: 1px solid var(--line); border-radius: var(--radius-sm); text-decoration: none; color: var(--ink); height: 100%; transition: border-color .15s, transform .15s; }
+.tiles a:hover { border-color: var(--maroon); transform: translateY(-1px); }
+.tile-ic { grid-row: 1 / span 2; font-size: 1.6rem; line-height: 1; }
+.tile-t { font-weight: 700; color: var(--maroon); }
+.tile-s { font-size: .82rem; color: var(--muted, #666); }
+.hl-wrap { display: grid; gap: 18px; grid-template-columns: 1fr; }
+@media (min-width: 960px) { .hl-wrap { grid-template-columns: 1fr 300px; align-items: start; } }
+.hl-date { font-size: .8rem; color: var(--muted, #777); margin-left: auto; }
+.card-top { display: flex; align-items: center; gap: 8px; }
+.wx { padding: 18px; }
+.wx-h { font-size: 1.15rem; margin: 0 0 8px; }
+.wx-now { display: flex; align-items: center; gap: 10px; margin: 0; }
+.wx-ic { font-size: 2.4rem; } .wx-t { font-size: 2.2rem; font-weight: 700; color: var(--maroon); }
+.wx-desc { margin: 4px 0 10px; font-size: .92rem; }
+.wx-days { list-style: none; padding: 0; margin: 0 0 8px; display: grid; gap: 6px; }
+.wx-days li { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; font-size: .9rem; border-top: 1px solid var(--line); padding-top: 6px; }
+.fact-card .fact-big { font-family: "Tiro Devanagari Hindi", serif; font-size: 1.8rem; color: var(--gold); margin: 4px 0 0; line-height: 1.1; }
+.jobs-band { display: grid; gap: 14px; background: #fff; border: 1px solid var(--line); border-left: 5px solid var(--gold); border-radius: var(--radius); padding: clamp(18px, 3vw, 28px); }
+@media (min-width: 860px) { .jobs-band { grid-template-columns: 1fr auto; align-items: center; } }
+.jobs-band h2 { margin-top: 0; }
+.svc-list { list-style: none; padding: 0; margin: 14px 0 0; display: grid; gap: 10px; grid-template-columns: 1fr; }
+@media (min-width: 720px) { .svc-list { grid-template-columns: repeat(3, 1fr); } }
+.svc-list a { display: flex; flex-direction: column; gap: 4px; padding: 14px; background: #fff; border: 1px solid var(--line); border-radius: var(--radius-sm); text-decoration: none; color: var(--ink); height: 100%; }
+.svc-list a:hover { border-color: var(--maroon); }
+.svc-list strong { color: var(--maroon); }
+.svc-list span { font-size: .9rem; color: var(--muted, #666); }
+.chips { list-style: none; padding: 0; margin: 10px 0 16px; display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { display: inline-block; padding: 6px 12px; border: 1px solid var(--line); border-radius: 999px; background: #fff; font: inherit; font-size: .9rem; cursor: default; }
+button.chip { cursor: pointer; } .chip.is-on { background: var(--maroon); color: #fff; border-color: var(--maroon); }
+.rb-box { background: #fff; border: 1px solid var(--line); border-left: 5px solid var(--maroon); border-radius: var(--radius); padding: clamp(16px, 3vw, 26px); }
+.steps-list { padding-left: 1.2em; } .steps-list li { margin: 4px 0; }
+.faq { border: 1px solid var(--line); border-radius: var(--radius-sm); background: #fff; padding: 10px 14px; margin: 8px 0; }
+.faq summary { cursor: pointer; font-weight: 600; }
+.search-results { padding-left: 1.2em; } .search-results li { margin: 12px 0; } .search-results a { font-weight: 600; }
+.main-nav ul { overflow-x: auto; scrollbar-width: none; } .main-nav ul::-webkit-scrollbar { display: none; }

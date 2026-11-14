@@ -5,6 +5,7 @@ Usage: python3 build.py [BASE_URL]   -> writes ./dist
 import os, sys, shutil, html, json, urllib.parse
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import sections as SEC
+import portal as PORTAL
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 BASE = (sys.argv[1] if len(sys.argv) > 1 else "https://vipinjanu77-max.github.io/jhunjhunu-blog/").rstrip("/") + "/"
@@ -14,7 +15,7 @@ IG_DM = "https://ig.me/m/jhunjhunu_blog"
 CHECKED = {"en": "21 Oct 2026", "hi": "21 अक्टू॰ 2026"}
 
 T = {
- "en": dict(explore="Explore", jobs="Jobs", events="Events", businesses="Businesses", advertise="Advertise with us", home="Home", talks="Jhunjhunu Talks", info="Useful Information", involve="Get involved", about="About",
+ "en": dict(explore="Explore", jobs="Jobs", events="Events", businesses="Businesses", advertise="Advertise with us", home="Home", talks="Jhunjhunu Talks", info="Services & helplines", facts="Know Jhunjhunu", videos="Videos", help="Need help?", involve="Get involved", about="About",
    editorial="Editorial policy", corrections="Corrections", privacy="Privacy policy", terms="Terms",
    other="हिंदी", other_lang="hi", skip="Skip to content", menu="Menu", follow="Follow on Instagram",
    promise="Jhunjhunu Ki Kahani, Jhunjhunu Ke Logon Ki Zubaani.", independent="Jhunjhunu Blog is independent. Sponsored content, when there is any, will always be labelled.",
@@ -22,7 +23,7 @@ T = {
    notgov="Jhunjhunu Blog is an independent platform, not a government website. Always confirm with the official source.",
    share="Share on WhatsApp", sections="Sections", jb="Jhunjhunu Blog", policies="Policies", cat_help="Emergency & helplines",
    report="Spotted a mistake? Tell us", nf_title="Page not found", nf_text="This page doesn't exist, or it has moved.", nf_btn="Go to the home page"),
- "hi": dict(explore="घूमिए", jobs="नौकरी", events="कार्यक्रम", businesses="कारोबार", advertise="हमारे साथ विज्ञापन", home="होम", talks="झुंझुनू टॉक्स", info="ज़रूरी जानकारी", involve="जुड़िए", about="हमारे बारे में",
+ "hi": dict(explore="घूमिए", jobs="नौकरी", events="कार्यक्रम", businesses="कारोबार", advertise="हमारे साथ विज्ञापन", home="होम", talks="झुंझुनू टॉक्स", info="सेवाएँ और हेल्पलाइन", facts="जानिए झुंझुनू", videos="वीडियो", help="मदद", involve="जुड़िए", about="हमारे बारे में",
    editorial="संपादकीय नीति", corrections="सुधार", privacy="गोपनीयता नीति", terms="उपयोग की शर्तें",
    other="English", other_lang="en", skip="मुख्य सामग्री पर जाएँ", menu="मेन्यू", follow="Instagram पर फ़ॉलो करें",
    promise="झुंझुनू की कहानी, झुंझुनू के लोगों की ज़ुबानी।", independent="झुंझुनू ब्लॉग स्वतंत्र है। प्रायोजित सामग्री होने पर उस पर हमेशा साफ़ लेबल रहेगा।",
@@ -32,7 +33,7 @@ T = {
    report="कोई ग़लती दिखी? हमें बताइए", nf_title="पेज नहीं मिला", nf_text="यह पेज मौजूद नहीं है या इसका पता बदल गया है।", nf_btn="होम पेज पर जाएँ"),
 }
 
-NAV = ["talks", "explore", "jobs", "events", "businesses", "info", "involve"]
+NAV = ["jobs", "events", "businesses", "explore", "info", "facts", "videos", "help"]
 SVG_MENU = '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>'
 SVG_IG = '<svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7Zm5 3.5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9Zm0 2a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5ZM17.5 5.8a1 1 0 1 1 0 2 1 1 0 0 1 0-2Z"/></svg>'
 
@@ -117,9 +118,9 @@ def page(lang, slug, title, desc, body, crumbs=None, og_type="website"):
       <p class="muted small">{e(t["independent"])}</p>
     </div>
     <nav aria-label="{e(t["sections"])}"><h2 class="footer-h">{e(t["sections"])}</h2><ul>
-      <li><a href="{href("talks")}">{e(t["talks"])}</a></li><li><a href="{href("explore")}">{e(t["explore"])}</a></li><li><a href="{href("jobs")}">{e(t["jobs"])}</a></li><li><a href="{href("events")}">{e(t["events"])}</a></li><li><a href="{href("businesses")}">{e(t["businesses"])}</a></li><li><a href="{href("info")}">{e(t["info"])}</a></li></ul></nav>
+      <li><a href="{href("videos")}">{e(t["videos"])}</a></li><li><a href="{href("facts")}">{e(t["facts"])}</a></li><li><a href="{href("explore")}">{e(t["explore"])}</a></li><li><a href="{href("jobs")}">{e(t["jobs"])}</a></li><li><a href="{href("events")}">{e(t["events"])}</a></li><li><a href="{href("businesses")}">{e(t["businesses"])}</a></li><li><a href="{href("info")}">{e(t["info"])}</a></li></ul></nav>
     <nav aria-label="{e(t["jb"])}"><h2 class="footer-h">{e(t["jb"])}</h2><ul>
-      <li><a href="{href("about")}">{e(t["about"])}</a></li><li><a href="{href("involve")}">{e(t["involve"])}</a></li><li><a href="{href("advertise")}">{e(t["advertise"])}</a></li><li><a href="{IG}" target="_blank" rel="noopener">Instagram ↗</a></li></ul></nav>
+      <li><a href="{href("about")}">{e(t["about"])}</a></li><li><a href="{href("help")}">{e(t["help"])}</a></li><li><a href="{href("involve")}">{e(t["involve"])}</a></li><li><a href="{href("advertise")}">{e(t["advertise"])}</a></li><li><a href="{IG}" target="_blank" rel="noopener">Instagram ↗</a></li></ul></nav>
     <nav aria-label="{e(t["policies"])}"><h2 class="footer-h">{e(t["policies"])}</h2><ul>
       <li><a href="{href("editorial-policy")}">{e(t["editorial"])}</a></li><li><a href="{href("corrections")}">{e(t["corrections"])}</a></li>
       <li><a href="{href("privacy")}">{e(t["privacy"])}</a></li><li><a href="{href("terms")}">{e(t["terms"])}</a></li></ul></nav>
@@ -186,7 +187,7 @@ COPY = {
 <h2>Our promise to guests and viewers</h2><ul><li>We research every guest before we sit down with them.</li><li>We never change what a guest meant to make a clip more dramatic.</li><li>If a business pays for any feature, it will be clearly labelled as sponsored.</li></ul>""",
   t_suggest="Suggest a guest",
   # info
-  i_title="Useful Information", i_desc="Helplines and official links for Jhunjhunu, each with its source and the date it was last checked.",
+  i_title="Services & helplines", i_desc="Emergency helplines and online government services for Jhunjhunu: SSO, e-Mitra, Jan Aadhaar, Rajasthan Sampark 181, land records and more.",
   i_lead="Helplines and official links, each with where it applies, its source and the date we last checked it. We add an item only after checking it against an official source.",
   # involve
   g_title="Get involved", g_desc="Suggest a guest or a story for Jhunjhunu Blog, or tell us about a mistake.",
@@ -215,8 +216,9 @@ COPY = {
 <p>To report a mistake, send us a message on Instagram with the page and what's wrong. If you can, include a source.</p>
 <h2>Corrections log</h2><div class="empty"><p class="muted">No corrections so far.</p></div>""",
   p_title="Privacy policy", p_desc="What information Jhunjhunu Blog collects and how it is used.",
-  p_body="""<p class="lead">This website has no accounts, no forms and no advertising trackers.</p>
-<h2>What this website collects</h2><ul><li>We do not ask for your name, phone number or email on this website.</li><li>We do not use analytics or advertising cookies.</li><li>The website is hosted on GitHub Pages, which may keep basic technical logs (such as IP addresses) to run and secure the service. Fonts are loaded from Google Fonts, which receives your IP address when the page loads.</li></ul>
+  p_body="""<p class="lead">This website has no accounts and no advertising trackers.</p>
+<h2>What this website collects</h2><ul><li>We do not use analytics or advertising cookies.</li><li>The website is hosted on GitHub Pages, which may keep basic technical logs (such as IP addresses) to run and secure the service. Fonts are loaded from Google Fonts, and the home-page weather from Open-Meteo. Both receive your IP address when the page loads.</li></ul>
+<h2>Forms (resume, job posts, listings, questions)</h2><p>When you send us your resume or a submission, we use it only for the purpose you sent it for. Resumes are shared with an employer only after you agree. You can ask us to delete your details at any time, and we delete resumes that have been inactive for 12 months.</p>
 <h2>When you message us</h2><p>If you message us on Instagram, we see what you send and your Instagram profile. We use it only to reply and to follow up on your suggestion. We do not sell it or share it with any business without your clear permission, and we do not add you to any WhatsApp group or list automatically.</p>
 <h2>Your choices</h2><p>You can ask us to delete your messages or any details you've shared with us by messaging us on Instagram.</p>
 <p class="small muted">Last updated: 14 Nov 2026.</p>""",
@@ -247,7 +249,7 @@ COPY = {
 <h2>एपिसोड</h2><div class="empty"><p class="empty-title">पहले एपिसोड तैयार हो रहे हैं।</p><p class="muted">एपिसोड प्रकाशित होते ही यहाँ दिखेंगे। एपिसोड 1 मिस न हो, इसके लिए Instagram पर फ़ॉलो करें।</p></div>
 <h2>मेहमानों और दर्शकों से हमारा वादा</h2><ul><li>हर मेहमान से बात करने से पहले हम उनके बारे में रिसर्च करते हैं।</li><li>क्लिप को ज़्यादा नाटकीय बनाने के लिए हम कभी मेहमान की बात का मतलब नहीं बदलते।</li><li>अगर कोई कारोबार किसी फ़ीचर के लिए भुगतान करता है, तो उस पर साफ़ "प्रायोजित" लिखा होगा।</li></ul>""",
   t_suggest="मेहमान सुझाइए",
-  i_title="ज़रूरी जानकारी", i_desc="झुंझुनू के लिए हेल्पलाइन और आधिकारिक लिंक, हर एक के साथ स्रोत और पिछली जाँच की तारीख़।",
+  i_title="सेवाएँ और हेल्पलाइन", i_desc="झुंझुनू के लिए आपातकालीन हेल्पलाइन और ऑनलाइन सरकारी सेवाएँ: SSO, ई-मित्र, जन आधार, राजस्थान संपर्क 181, भूमि रिकॉर्ड और बहुत कुछ।",
   i_lead="हेल्पलाइन और आधिकारिक लिंक, हर एक के साथ उसका लागू क्षेत्र, स्रोत और हमारी पिछली जाँच की तारीख़। हम कोई भी जानकारी आधिकारिक स्रोत से मिलान करने के बाद ही जोड़ते हैं।",
   g_title="जुड़िए", g_desc="झुंझुनू ब्लॉग के लिए कोई मेहमान या कहानी सुझाइए, या किसी ग़लती के बारे में बताइए।",
   g_lead="झुंझुनू ब्लॉग झुंझुनू के लोगों के साथ मिलकर बन रहा है। आप ऐसे जुड़ सकते हैं।",
@@ -273,8 +275,9 @@ COPY = {
 <p>ग़लती बताने के लिए Instagram पर हमें पेज और ग़लती के बारे में मैसेज करें। हो सके तो स्रोत भी भेजें।</p>
 <h2>सुधार रिकॉर्ड</h2><div class="empty"><p class="muted">अभी तक कोई सुधार नहीं।</p></div>""",
   p_title="गोपनीयता नीति", p_desc="झुंझुनू ब्लॉग कौन-सी जानकारी लेता है और उसका इस्तेमाल कैसे होता है।",
-  p_body="""<p class="lead">इस वेबसाइट पर कोई अकाउंट, कोई फ़ॉर्म और कोई विज्ञापन ट्रैकर नहीं है।</p>
-<h2>यह वेबसाइट क्या जानकारी लेती है</h2><ul><li>हम इस वेबसाइट पर आपका नाम, फ़ोन नंबर या ईमेल नहीं माँगते।</li><li>हम एनालिटिक्स या विज्ञापन कुकीज़ का इस्तेमाल नहीं करते।</li><li>वेबसाइट GitHub Pages पर होस्ट है, जो सेवा चलाने और सुरक्षित रखने के लिए बुनियादी तकनीकी लॉग (जैसे IP पता) रख सकता है। फ़ॉन्ट Google Fonts से लोड होते हैं, जिसे पेज खुलते समय आपका IP पता मिलता है।</li></ul>
+  p_body="""<p class="lead">इस वेबसाइट पर कोई अकाउंट और कोई विज्ञापन ट्रैकर नहीं है।</p>
+<h2>यह वेबसाइट क्या जानकारी लेती है</h2><ul><li>हम एनालिटिक्स या विज्ञापन कुकीज़ का इस्तेमाल नहीं करते।</li><li>वेबसाइट GitHub Pages पर होस्ट है, जो सेवा चलाने और सुरक्षित रखने के लिए बुनियादी तकनीकी लॉग (जैसे IP पता) रख सकता है। फ़ॉन्ट Google Fonts से और होम पेज का मौसम Open-Meteo से लोड होता है। पेज खुलते समय दोनों को आपका IP पता मिलता है।</li></ul>
+<h2>फ़ॉर्म (रिज़्यूमे, नौकरी पोस्ट, लिस्टिंग, सवाल)</h2><p>आप जो रिज़्यूमे या जानकारी भेजते हैं, उसका इस्तेमाल हम सिर्फ़ उसी काम के लिए करते हैं जिसके लिए आपने भेजा है। रिज़्यूमे किसी नियोक्ता को आपकी सहमति के बाद ही दिया जाता है। आप कभी भी अपनी जानकारी हटाने के लिए कह सकते हैं, और 12 महीने से निष्क्रिय रिज़्यूमे हम हटा देते हैं।</p>
 <h2>जब आप हमें मैसेज करते हैं</h2><p>अगर आप Instagram पर हमें मैसेज करते हैं, तो हमें आपका मैसेज और आपकी Instagram प्रोफ़ाइल दिखती है। हम इसका इस्तेमाल सिर्फ़ जवाब देने और आपके सुझाव पर आगे काम करने के लिए करते हैं। हम इसे बेचते नहीं, आपकी साफ़ अनुमति के बिना किसी कारोबार से साझा नहीं करते, और आपको अपने-आप किसी WhatsApp ग्रुप या लिस्ट में नहीं जोड़ते।</p>
 <h2>आपके विकल्प</h2><p>आप Instagram पर मैसेज करके हमसे अपने मैसेज या साझा की गई कोई भी जानकारी हटाने के लिए कह सकते हैं।</p>
 <p class="small muted">पिछला अपडेट: 14 नवं॰ 2026।</p>""",
@@ -298,34 +301,18 @@ def build():
     for lang in ("hi", "en"):
         t, c = T[lang], COPY[lang]
         up = "../"
-        # ---- home
-        pillars = "".join(f'<article class="card"><h3 class="card-title">{e(a)}</h3><p class="card-text">{e(b)}</p></article>' for a, b in c["pillars"])
+        # ---- home (city portal)
         ess = "".join(info_card(lang, it, f'info/{it["slug"]}/') for it in INFO)
-        shortcuts, explore_band = SEC.home_extra(lang)
-        home = f'''<section class="hero"><div class="wrap">
-  <p class="eyebrow">{e(c["eyebrow"])}</p><h1>{e(c["h1"])}</h1><p class="hero-sub">{e(c["sub"])}</p>
-  <div class="btn-row"><a class="btn btn-primary" href="{IG}" target="_blank" rel="noopener">{SVG_IG} {e(t["follow"])}</a>
-  <a class="btn btn-ghost" href="involve/">{e(c["cta2"])}</a></div><ul class="shortcuts">{shortcuts}</ul></div></section>
-<section class="band"><div class="wrap"><div class="show-card">
-  <p class="eyebrow">{e(t["talks"]) if lang=="hi" else "The show"}</p><h2>{e(c["talks_h"])}</h2><p>{e(c["talks_p"])}</p>
-  <div class="btn-row"><a class="btn btn-gold" href="talks/">{e(c["talks_more"])} →</a><a class="btn btn-ghost btn-on-dark" href="{IG}" target="_blank" rel="noopener">{e(t["follow"])}</a></div>
-</div></div></section>
-{explore_band}
-<section class="band band-tint"><div class="wrap"><div class="section-head"><div><h2>{e(c["pillars_h"])}</h2></div></div><div class="grid grid-4">{pillars}</div></div></section>
-<section class="band band-essentials"><div class="wrap">
-  <div class="section-head"><div><h2>{e(c["ess_h"])}</h2><p class="muted">{e(c["ess_p"])}</p></div><a class="link-more" href="info/">{e(c["all"])} <span aria-hidden="true">→</span></a></div>
-  <div class="essentials">{ess}</div><p class="small muted independent">{e(t["notgov"])}</p></div></section>
-<section class="band band-tint"><div class="wrap invite-box"><h2>{e(c["inv_h"])}</h2><p>{e(c["inv_p"])}</p>
-  <a class="btn btn-primary" href="{IG_DM}" target="_blank" rel="noopener">{e(c["inv_btn"])}</a></div></section>'''
-        page(lang, "", c["home_title"], c["home_desc"], home)
-        # ---- talks
-        page(lang, "talks", c["t_title"], c["t_desc"], f'''<div class="wrap page detail-narrow"><p class="eyebrow">{e(t["talks"])}</p><h1>{e(c["t_title"])}</h1>
-<p class="lead">{e(c["t_lead"])}</p><div class="prose">{c["t_body"]}</div>
-<div class="btn-row"><a class="btn btn-primary" href="{IG}" target="_blank" rel="noopener">{SVG_IG} {e(t["follow"])}</a><a class="btn btn-ghost" href="../involve/">{e(c["t_suggest"])}</a></div></div>''', crumbs=[])
+        _, explore_band = SEC.home_extra(lang)
+        page(lang, "", PORTAL.P[lang]["h1"] + " | " + t["jb"], PORTAL.P[lang]["sub"], PORTAL.home(lang, T, IG, IG_DM, explore_band, ess))
+        # ---- old talks URL -> videos
+        tdir = os.path.join(DIST, lang, "talks"); os.makedirs(tdir, exist_ok=True)
+        open(os.path.join(tdir, "index.html"), "w").write(f'<!doctype html><meta charset="utf-8"><title>Videos</title><link rel="canonical" href="{BASE}{lang}/videos/"><meta http-equiv="refresh" content="0; url=../videos/"><a href="../videos/">Videos</a>')
         # ---- info list + items
         cards = "".join(info_card(lang, it, f'{it["slug"]}/') for it in INFO)
         page(lang, "info", c["i_title"], c["i_desc"], f'''<div class="wrap page"><h1>{e(c["i_title"])}</h1><p class="lead detail-narrow">{e(c["i_lead"])}</p>
-<div class="info-group"><h2>{e(t["cat_help"])}</h2><div class="essentials">{cards}</div></div><p class="notice notice-info">{e(t["notgov"])}</p></div>''', crumbs=[])
+<div class="info-group"><h2>{e(t["cat_help"])}</h2><div class="essentials">{cards}</div></div>
+<div class="info-group"><h2>{e(PORTAL.P[lang]["services_h"])}</h2><div class="essentials">{PORTAL.gov_cards(lang, T)}</div><p class="checked">{e(t["checked"])}: {SEC.CHECKED2[lang]}</p></div><p class="notice notice-info">{e(t["notgov"])}</p></div>''', crumbs=[])
         for it in INFO:
             ci = it[lang]; url = BASE + f'{lang}/info/{it["slug"]}/'
             wa = "https://wa.me/?text=" + urllib.parse.quote(ci["title"] + " " + url)
@@ -348,6 +335,7 @@ def build():
         prose_page(lang, "privacy", c["p_title"], c["p_desc"], c["p_body"])
         prose_page(lang, "terms", c["tm_title"], c["tm_desc"], c["tm_body"])
         SEC.build_sections(lang, page, IG, IG_DM, BASE)
+        PORTAL.build_portal(lang, page, T, IG, IG_DM, BASE, INFO, DIST)
     # ---- root: Hindi-first redirect page
     open(os.path.join(DIST, "index.html"), "w").write(f'''<!doctype html><html lang="hi-IN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Jhunjhunu Blog | झुंझुनू ब्लॉग</title><link rel="canonical" href="{BASE}hi/"><meta http-equiv="refresh" content="0; url=hi/">
@@ -362,6 +350,7 @@ def build():
 <body><main class="wrap page detail-narrow" style="text-align:center;padding:60px 16px"><img src="{BASE}brand/logo-360.png" width="180" alt="Jhunjhunu Blog" style="margin:0 auto 20px">
 <h1>{t["nf_title"]}</h1><p>{t["nf_text"]}</p><p lang="en" class="muted">{T["en"]["nf_text"]}</p>
 <p class="btn-row" style="justify-content:center"><a class="btn btn-primary" href="{BASE}hi/">{t["nf_btn"]}</a><a class="btn btn-ghost" href="{BASE}en/">Home (English)</a></p></main></body></html>''')
+    PORTAL.search_index(DIST, BASE)
     # ---- sitemap / robots
     urls = []
     for root, _, files in os.walk(DIST):

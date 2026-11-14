@@ -1,5 +1,6 @@
 """Content + builders for Explore, Jobs, Events, Businesses, Advertise. Imported by build.py."""
 import html
+import portal as PORTAL
 e = html.escape
 CHECKED2 = {"en": "14 Nov 2026", "hi": "14 नवं॰ 2026"}
 
@@ -81,13 +82,13 @@ JOB_SOURCES = [
 ]
 JOBS = {
  "en": dict(title="Jobs & Opportunities", desc="Where to find genuine jobs for Jhunjhunu: official recruitment portals, local openings checked by us, and how to avoid job scams.",
-   lead="We don't copy job listings from other websites. We point you to the official source, and we list local openings only after checking them with the employer.",
+   lead="Local openings in Jhunjhunu that you can apply to through us, a resume bank for future openings, and the official places to check government jobs.",
    off_h="Where to check government jobs", off_p="These are the official websites. Always read the official notification before applying, especially the last date and fee.",
    local_h="Local openings in Jhunjhunu", local_empty="No local openings listed yet.", local_p="Hiring in Jhunjhunu? Listing a job is free. Send us the role, pay range, location and how to apply. We'll call you to confirm before it goes up.",
    scam_h="Stay safe from job scams", scam=["Never pay anyone to get a job. Official application fees are paid only through the official portal.", "Check the web address. Rajasthan government sites end in .rajasthan.gov.in, and central ones in .gov.in or .nic.in.", "Ignore WhatsApp or Telegram messages promising a 'guaranteed' or 'direct' government job.", "If you've lost money to a job scam, call 1930 or report it at cybercrime.gov.in."],
    scam_link="1930: cyber fraud helpline"),
  "hi": dict(title="नौकरी और अवसर", desc="झुंझुनू के लिए असली नौकरियाँ कहाँ देखें: आधिकारिक भर्ती पोर्टल, हमारे द्वारा जाँची गई स्थानीय नौकरियाँ, और नौकरी के नाम पर धोखाधड़ी से कैसे बचें।",
-   lead="हम दूसरी वेबसाइटों से नौकरियों की लिस्ट कॉपी नहीं करते। हम आपको आधिकारिक स्रोत तक पहुँचाते हैं, और स्थानीय नौकरियाँ नियोक्ता से पुष्टि करने के बाद ही डालते हैं।",
+   lead="झुंझुनू की स्थानीय नौकरियाँ जिनमें आप हमारे ज़रिए आवेदन कर सकते हैं, आगे की नौकरियों के लिए रिज़्यूमे बैंक, और सरकारी नौकरियाँ देखने की आधिकारिक जगहें।",
    off_h="सरकारी नौकरियाँ कहाँ देखें", off_p="ये आधिकारिक वेबसाइटें हैं। आवेदन से पहले आधिकारिक अधिसूचना ज़रूर पढ़ें, ख़ासकर अंतिम तिथि और फ़ीस।",
    local_h="झुंझुनू में स्थानीय नौकरियाँ", local_empty="अभी कोई स्थानीय नौकरी लिस्ट नहीं है।", local_p="झुंझुनू में भर्ती कर रहे हैं? नौकरी लिस्ट करना मुफ़्त है। पद, वेतन, जगह और आवेदन का तरीक़ा हमें भेजें। लिस्ट करने से पहले हम आपको फ़ोन करके पुष्टि करेंगे।",
    scam_h="नौकरी के नाम पर धोखाधड़ी से बचें", scam=["नौकरी पाने के लिए किसी को पैसे न दें। आधिकारिक आवेदन शुल्क सिर्फ़ आधिकारिक पोर्टल पर ही भरा जाता है।", "वेब पता जाँचें। राजस्थान सरकार की साइटें .rajasthan.gov.in पर, और केंद्र सरकार की .gov.in या .nic.in पर ख़त्म होती हैं।", "'पक्की' या 'सीधी' सरकारी नौकरी का वादा करने वाले WhatsApp या Telegram मैसेज को नज़रअंदाज़ करें।", "अगर नौकरी के नाम पर ठगी हुई है, तो 1930 पर कॉल करें या cybercrime.gov.in पर शिकायत करें।"],
@@ -177,15 +178,18 @@ def build_sections(lang, page, IG, IG_DM, BASE):
 <p class="row-meta">{e(x[lang])}</p></div><div class="info-actions"><a class="btn btn-ghost btn-small" href="{x["url"]}" target="_blank" rel="noopener">{e(s["official"])}</a></div></article>''' for x in JOB_SOURCES)
     scam = "".join(f"<li>{e(t)}</li>" for t in j["scam"])
     page(lang, "jobs", j["title"], j["desc"], f'''<div class="wrap page"><h1>{e(j["title"])}</h1><p class="lead detail-narrow">{e(j["lead"])}</p>
+
+<section class="info-group"><h2>{e(j["local_h"])}</h2><div class="empty"><p class="empty-title">{e(j["local_empty"])}</p><p class="muted">{e(j["local_p"])}</p><a class="btn btn-primary" href="{PORTAL.form_or_dm("job_post", IG_DM)}" target="_blank" rel="noopener">{e({"en":"Post a job, free","hi":"नौकरी पोस्ट करें, मुफ़्त"}[lang])}</a></div>
+<div class="detail-narrow"><h3>{e(PORTAL.P[lang]["apply_flow"])}</h3><ol class="steps-list">{"".join("<li>"+e(x)+"</li>" for x in PORTAL.P[lang]["apply_steps"])}</ol></div></section>
+<section class="info-group rb-box" id="resume-bank"><h2>{e(PORTAL.P[lang]["rb_h"])}</h2><p class="detail-narrow">{e(PORTAL.P[lang]["rb_p"])}</p><a class="btn btn-primary" href="{PORTAL.form_or_dm("resume", IG_DM)}" target="_blank" rel="noopener">{e(PORTAL.P[lang]["rb_btn"])}</a></section>
 <section class="info-group"><h2>{e(j["off_h"])}</h2><p class="muted">{e(j["off_p"])}</p><div class="essentials">{srcs}</div><p class="checked">{e(s["checked"])}: {CHECKED2[lang]}</p></section>
-<section class="info-group"><h2>{e(j["local_h"])}</h2><div class="empty"><p class="empty-title">{e(j["local_empty"])}</p><p class="muted">{e(j["local_p"])}</p>{msg_btn}</div></section>
 <section class="info-group detail-narrow"><h2>{e(j["scam_h"])}</h2><div class="prose"><ul>{scam}</ul></div><p><a href="../info/1930-cyber-fraud-helpline/">{e(j["scam_link"])} →</a></p></section></div>''', crumbs=[])
     # Events
     v = EV[lang]
     evs = "".join(f'''<article class="card"><h3 class="card-title">{e(x[lang]["name"])}</h3><dl class="facts"><div><dt>{e(v["when"])}</dt><dd>{e(x[lang]["when"])}</dd></div><div><dt>{e(v["where"])}</dt><dd>{e(x[lang]["where"])}</dd></div></dl>
 <p class="card-text">{e(x[lang]["body"])}</p><p class="small muted">{e(s["sources"])}: <a href="{x["src"][1]}" target="_blank" rel="noopener">{e(x["src"][0])}</a></p></article>''' for x in EVENTS)
     page(lang, "events", v["title"], v["desc"], f'''<div class="wrap page"><h1>{e(v["title"])}</h1><p class="lead detail-narrow">{e(v["lead"])}</p>
-<section class="info-group"><h2>{e(v["up_h"])}</h2><div class="empty"><p class="empty-title">{e(v["up_empty"])}</p><p class="muted">{e(v["up_p"])}</p>{msg_btn}</div></section>
+<section class="info-group"><h2>{e(v["up_h"])}</h2><div class="empty"><p class="empty-title">{e(v["up_empty"])}</p><p class="muted">{e(v["up_p"])}</p><a class="btn btn-primary" href="{PORTAL.form_or_dm("event", IG_DM)}" target="_blank" rel="noopener">{e({"en":"List your event","hi":"अपना कार्यक्रम लिस्ट करें"}[lang])}</a></div></section>
 <section class="info-group"><h2>{e(v["annual_h"])}</h2><div class="grid grid-2">{evs}</div><p class="checked">{e(s["checked"])}: {CHECKED2[lang]}</p></section></div>''', crumbs=[])
     # Businesses
     b = BIZ[lang]
@@ -194,7 +198,7 @@ def build_sections(lang, page, IG, IG_DM, BASE):
     page(lang, "businesses", b["title"], b["desc"], f'''<div class="wrap page"><h1>{e(b["title"])}</h1><p class="lead detail-narrow">{e(b["lead"])}</p>
 <section class="info-group"><h2>{e(b["cats_h"])}</h2><ul class="chips">{chips}</ul><div class="empty"><p class="empty-title">{e(b["empty"])}</p></div></section>
 <div class="split"><section><h2>{e(b["how_h"])}</h2><div class="prose"><ul>{how}</ul></div></section>
-<section class="invite-box" style="text-align:left;margin:0"><h2>{e(b["cta_h"])}</h2><p>{e(b["cta_p"])}</p>{msg_btn}</section></div></div>''', crumbs=[])
+<section class="invite-box" style="text-align:left;margin:0"><h2>{e(b["cta_h"])}</h2><p>{e(b["cta_p"])}</p><a class="btn btn-primary" href="{PORTAL.form_or_dm("listing", IG_DM)}" target="_blank" rel="noopener">{e(b["cta_h"])}</a></section></div></div>''', crumbs=[])
     # Advertise
     a = AD[lang]
     ways = "".join(f'<article class="card"><h3 class="card-title">{e(t)}</h3><p class="card-text">{e(d)}</p></article>' for t, d in a["ways"])
