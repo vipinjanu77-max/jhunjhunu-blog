@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://vipinjanu77-max.github.io/jhunjhunu-blog/sitemap.xml
