@@ -446,3 +446,11 @@ legend { font-family: var(--head); font-size: 1.15rem; padding: 0; margin-bottom
 .invite-box p { margin-left: auto; margin-right: auto; max-width: 60ch; }
 .grid .card h2.card-title { font-size: 1.2rem; }
 .grid .card .card-text { display: block; -webkit-line-clamp: unset; line-clamp: unset; overflow: visible; }
+.grid-2 { display: grid; gap: 14px; grid-template-columns: 1fr; }
+@media (min-width: 760px) { .grid-2 { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 720px) { .hero .shortcuts { grid-template-columns: repeat(5, 1fr); } }
+.info-group { margin-top: 28px; }
+.info-group > .empty { margin-top: 12px; }
+.empty .btn { margin-top: 10px; }
+.facts { margin: 6px 0; }
+.split > section > h2 { margin-top: 28px; }

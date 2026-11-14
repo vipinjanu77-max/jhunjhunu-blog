@@ -3,6 +3,8 @@
 Usage: python3 build.py [BASE_URL]   -> writes ./dist
 """
 import os, sys, shutil, html, json, urllib.parse
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import sections as SEC
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 BASE = (sys.argv[1] if len(sys.argv) > 1 else "https://vipinjanu77-max.github.io/jhunjhunu-blog/").rstrip("/") + "/"
@@ -12,7 +14,7 @@ IG_DM = "https://ig.me/m/jhunjhunu_blog"
 CHECKED = {"en": "21 Oct 2026", "hi": "21 अक्टू॰ 2026"}
 
 T = {
- "en": dict(home="Home", talks="Jhunjhunu Talks", info="Useful Information", involve="Get involved", about="About",
+ "en": dict(explore="Explore", jobs="Jobs", events="Events", businesses="Businesses", advertise="Advertise with us", home="Home", talks="Jhunjhunu Talks", info="Useful Information", involve="Get involved", about="About",
    editorial="Editorial policy", corrections="Corrections", privacy="Privacy policy", terms="Terms",
    other="हिंदी", other_lang="hi", skip="Skip to content", menu="Menu", follow="Follow on Instagram",
    promise="Jhunjhunu Ki Kahani, Jhunjhunu Ke Logon Ki Zubaani.", independent="Jhunjhunu Blog is independent. Sponsored content, when there is any, will always be labelled.",
@@ -20,7 +22,7 @@ T = {
    notgov="Jhunjhunu Blog is an independent platform, not a government website. Always confirm with the official source.",
    share="Share on WhatsApp", sections="Sections", jb="Jhunjhunu Blog", policies="Policies", cat_help="Emergency & helplines",
    report="Spotted a mistake? Tell us", nf_title="Page not found", nf_text="This page doesn't exist, or it has moved.", nf_btn="Go to the home page"),
- "hi": dict(home="होम", talks="झुंझुनू टॉक्स", info="ज़रूरी जानकारी", involve="जुड़िए", about="हमारे बारे में",
+ "hi": dict(explore="घूमिए", jobs="नौकरी", events="कार्यक्रम", businesses="कारोबार", advertise="हमारे साथ विज्ञापन", home="होम", talks="झुंझुनू टॉक्स", info="ज़रूरी जानकारी", involve="जुड़िए", about="हमारे बारे में",
    editorial="संपादकीय नीति", corrections="सुधार", privacy="गोपनीयता नीति", terms="उपयोग की शर्तें",
    other="English", other_lang="en", skip="मुख्य सामग्री पर जाएँ", menu="मेन्यू", follow="Instagram पर फ़ॉलो करें",
    promise="झुंझुनू की कहानी, झुंझुनू के लोगों की ज़ुबानी।", independent="झुंझुनू ब्लॉग स्वतंत्र है। प्रायोजित सामग्री होने पर उस पर हमेशा साफ़ लेबल रहेगा।",
@@ -30,7 +32,7 @@ T = {
    report="कोई ग़लती दिखी? हमें बताइए", nf_title="पेज नहीं मिला", nf_text="यह पेज मौजूद नहीं है या इसका पता बदल गया है।", nf_btn="होम पेज पर जाएँ"),
 }
 
-NAV = ["talks", "info", "involve", "about"]
+NAV = ["talks", "explore", "jobs", "events", "businesses", "info", "involve"]
 SVG_MENU = '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>'
 SVG_IG = '<svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7Zm5 3.5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9Zm0 2a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5ZM17.5 5.8a1 1 0 1 1 0 2 1 1 0 0 1 0-2Z"/></svg>'
 
@@ -95,7 +97,7 @@ def page(lang, slug, title, desc, body, crumbs=None, og_type="website"):
       <details class="mobile-menu">
         <summary aria-label="{e(t["menu"])}">{SVG_MENU}<span class="sr-only">{e(t["menu"])}</span></summary>
         <nav class="mobile-nav" aria-label="{e(t["menu"])}">
-          <ul><li><a href="{href("")}">{e(t["home"])}</a></li>{nav}</ul>
+          <ul><li><a href="{href("")}">{e(t["home"])}</a></li>{nav}<li><a href="{href("about")}">{e(t["about"])}</a></li></ul>
           <ul class="mobile-secondary"><li><a href="{IG}" target="_blank" rel="noopener">{e(t["follow"])}</a></li></ul>
         </nav>
       </details>
@@ -115,9 +117,9 @@ def page(lang, slug, title, desc, body, crumbs=None, og_type="website"):
       <p class="muted small">{e(t["independent"])}</p>
     </div>
     <nav aria-label="{e(t["sections"])}"><h2 class="footer-h">{e(t["sections"])}</h2><ul>
-      <li><a href="{href("talks")}">{e(t["talks"])}</a></li><li><a href="{href("info")}">{e(t["info"])}</a></li><li><a href="{href("involve")}">{e(t["involve"])}</a></li></ul></nav>
+      <li><a href="{href("talks")}">{e(t["talks"])}</a></li><li><a href="{href("explore")}">{e(t["explore"])}</a></li><li><a href="{href("jobs")}">{e(t["jobs"])}</a></li><li><a href="{href("events")}">{e(t["events"])}</a></li><li><a href="{href("businesses")}">{e(t["businesses"])}</a></li><li><a href="{href("info")}">{e(t["info"])}</a></li></ul></nav>
     <nav aria-label="{e(t["jb"])}"><h2 class="footer-h">{e(t["jb"])}</h2><ul>
-      <li><a href="{href("about")}">{e(t["about"])}</a></li><li><a href="{IG}" target="_blank" rel="noopener">Instagram ↗</a></li></ul></nav>
+      <li><a href="{href("about")}">{e(t["about"])}</a></li><li><a href="{href("involve")}">{e(t["involve"])}</a></li><li><a href="{href("advertise")}">{e(t["advertise"])}</a></li><li><a href="{IG}" target="_blank" rel="noopener">Instagram ↗</a></li></ul></nav>
     <nav aria-label="{e(t["policies"])}"><h2 class="footer-h">{e(t["policies"])}</h2><ul>
       <li><a href="{href("editorial-policy")}">{e(t["editorial"])}</a></li><li><a href="{href("corrections")}">{e(t["corrections"])}</a></li>
       <li><a href="{href("privacy")}">{e(t["privacy"])}</a></li><li><a href="{href("terms")}">{e(t["terms"])}</a></li></ul></nav>
@@ -299,14 +301,16 @@ def build():
         # ---- home
         pillars = "".join(f'<article class="card"><h3 class="card-title">{e(a)}</h3><p class="card-text">{e(b)}</p></article>' for a, b in c["pillars"])
         ess = "".join(info_card(lang, it, f'info/{it["slug"]}/') for it in INFO)
+        shortcuts, explore_band = SEC.home_extra(lang)
         home = f'''<section class="hero"><div class="wrap">
   <p class="eyebrow">{e(c["eyebrow"])}</p><h1>{e(c["h1"])}</h1><p class="hero-sub">{e(c["sub"])}</p>
   <div class="btn-row"><a class="btn btn-primary" href="{IG}" target="_blank" rel="noopener">{SVG_IG} {e(t["follow"])}</a>
-  <a class="btn btn-ghost" href="involve/">{e(c["cta2"])}</a></div></div></section>
+  <a class="btn btn-ghost" href="involve/">{e(c["cta2"])}</a></div><ul class="shortcuts">{shortcuts}</ul></div></section>
 <section class="band"><div class="wrap"><div class="show-card">
   <p class="eyebrow">{e(t["talks"]) if lang=="hi" else "The show"}</p><h2>{e(c["talks_h"])}</h2><p>{e(c["talks_p"])}</p>
   <div class="btn-row"><a class="btn btn-gold" href="talks/">{e(c["talks_more"])} →</a><a class="btn btn-ghost btn-on-dark" href="{IG}" target="_blank" rel="noopener">{e(t["follow"])}</a></div>
 </div></div></section>
+{explore_band}
 <section class="band band-tint"><div class="wrap"><div class="section-head"><div><h2>{e(c["pillars_h"])}</h2></div></div><div class="grid grid-4">{pillars}</div></div></section>
 <section class="band band-essentials"><div class="wrap">
   <div class="section-head"><div><h2>{e(c["ess_h"])}</h2><p class="muted">{e(c["ess_p"])}</p></div><a class="link-more" href="info/">{e(c["all"])} <span aria-hidden="true">→</span></a></div>
@@ -343,6 +347,7 @@ def build():
         prose_page(lang, "corrections", c["c_title"], c["c_desc"], c["c_body"])
         prose_page(lang, "privacy", c["p_title"], c["p_desc"], c["p_body"])
         prose_page(lang, "terms", c["tm_title"], c["tm_desc"], c["tm_body"])
+        SEC.build_sections(lang, page, IG, IG_DM, BASE)
     # ---- root: Hindi-first redirect page
     open(os.path.join(DIST, "index.html"), "w").write(f'''<!doctype html><html lang="hi-IN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Jhunjhunu Blog | झुंझुनू ब्लॉग</title><link rel="canonical" href="{BASE}hi/"><meta http-equiv="refresh" content="0; url=hi/">
